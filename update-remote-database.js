@@ -8,6 +8,19 @@ function reloadData(e)
 	xhr = Titanium.Network.createHTTPClient({
 	    onload: function() {
 	    	
+	
+			Ti.API.info("parse data");
+			try{
+				if(OS_ANDROID)
+				{
+					var f = Ti.Filesystem.getFile(path_to_doc,'myalloy.sql');   
+					f.write(xhr.responseData);
+				}
+			}catch(e)
+			{
+				Ti.API.info("CAN'T WRITE FILE");
+			}
+	
 	    	//SUpression de la base local existante
 	    	var db = Ti.Database.open('mydb1Installed');
 	        db.remove();
@@ -58,5 +71,8 @@ function displayData()
 	db.close();
 }
 
-displayData()
+// If database exists ->displayData()
+// If no database installed -> reloadData();
+
+reloadData();
 $.index.open();
